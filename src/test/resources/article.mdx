@@ -1,0 +1,34 @@
+---
+title: Hidden metadata title
+description: Not article prose
+draft: true
+---
+
+import Callout from './Callout.astro';
+
+# A static site
+
+This is a [useful guide](https://example.com).
+
+<Callout title="Hidden title">
+## Build once
+
+Run `npm run build`.
+</Callout>
+
+![Hidden image description](./banner.png)
+
+```ts
+const hidden = 'not prose';
+```
+
+{/* An editor-only comment */}
+
+- [x] Done
+- [ ] Later
+
+| Content | Production |
+| --- | --- |
+| Article | Included |
+
+<GeneratedChart data={[1, 2, 3]} />

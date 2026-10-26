@@ -1,0 +1,32 @@
+<idea-plugin url="https://github.com/x-ider/word-counter-plugin">
+    <id>com.romaevt.wordcounter</id>
+    <name>Word Counter</name>
+    <vendor url="https://romaevt.com">Roman Evtushenko</vendor>
+    <description><![CDATA[
+        <p>Word and character counts in the status bar for plain text, Markdown, and MDX.</p>
+        <ul>
+            <li>Live totals for the whole document or selected text, including multiple selections.</li>
+            <li>Markdown-aware counting excludes frontmatter, formatting, link URLs, and code blocks.</li>
+            <li>Count literal MDX text without evaluating components or expressions.</li>
+            <li>Click the counter to adjust the update delay and include or exclude whitespace.</li>
+        </ul>
+        <p>Free and open source under the MIT license.
+            <a href="https://github.com/x-ider/word-counter-plugin">Source and documentation</a>
+            | <a href="https://github.com/x-ider/word-counter-plugin/issues">Report an issue</a></p>
+    ]]></description>
+    <change-notes><![CDATA[
+        <p>1.0.0: Initial release.</p>
+        <ul>
+            <li>Word and character totals for TXT, Markdown, and MDX.</li>
+            <li>Whole-document, selection, and multiple-caret counts.</li>
+            <li>Configurable update delay and whitespace counting in the status-bar popup.</li>
+            <li>Background counting with a plain-text fast path and compact Markdown source mappings.</li>
+        </ul>
+    ]]></change-notes>
+    <depends>com.intellij.modules.platform</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <statusBarWidgetFactory id="WordCounter"
+                                implementation="com.romaevt.wordcounter.WordCounterWidgetFactory"
+                                order="before Position"/>
+    </extensions>
+</idea-plugin>

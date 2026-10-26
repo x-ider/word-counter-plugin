@@ -1,0 +1,19 @@
+.gradle/
+.gradle-user-home/
+.idea/
+.intellijPlatform/
+.kotlin/
+build/
+out/
+*.iml
+.DS_Store
+
+# Local environment and signing credentials, including in a standalone checkout.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
