@@ -14,5 +14,5 @@ class WordCounterWidgetFactory : StatusBarEditorBasedWidgetFactory() {
 
     override fun getDisplayName(): String = "Word Counter"
 
-    override fun createWidget(project: Project, scope: CoroutineScope): StatusBarWidget = WordCounterWidget(scope)
+    override fun createWidget(project: Project, scope: CoroutineScope): StatusBarWidget = WordCounterWidget(project, scope)
 }

@@ -15,6 +15,11 @@
             | <a href="https://github.com/x-ider/word-counter-plugin/issues">Report an issue</a></p>
     ]]></description>
     <change-notes><![CDATA[
+        <p>1.0.1: IDE compatibility fixes.</p>
+        <ul>
+            <li>Use supported APIs to track editor changes in each window.</li>
+            <li>Remove internal, experimental, and deprecated API usages reported by Plugin Verifier.</li>
+        </ul>
         <p>1.0.0: Initial release.</p>
         <ul>
             <li>Word and character totals for TXT, Markdown, and MDX.</li>

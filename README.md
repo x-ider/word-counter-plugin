@@ -26,7 +26,7 @@ Settings pop-up
 
 ## Download
 
-[Download Word Counter 1.0.0](word-counter.zip?raw=true)
+[Download Word Counter 1.0.1](word-counter.zip?raw=true)
 
 This is an unsigned build. The plugin is not yet available on JetBrains Marketplace.
 
@@ -49,7 +49,7 @@ cd word-counter-plugin
 On Windows, use `gradlew.bat` instead of `./gradlew`. The first build downloads
 Gradle, dependencies, and the IntelliJ IDEA SDK.
 
-The installable ZIP is written to `build/distributions/word-counter-1.0.0.zip`.
+The installable ZIP is written to `build/distributions/word-counter-1.0.1.zip`.
 Install it using the same steps as above.
 
 ## Supported Versions
@@ -58,4 +58,5 @@ Requires IntelliJ Platform **2026.1 (build 261)** or newer. Tested with
 **WebStorm 2026.1.4** and **GoLand 2026.1.4**.
 
 The plugin uses shared platform APIs rather than product-specific dependencies.
-Other IDE products and newer releases have not yet been verified.
+Plugin Verifier also checked compatibility with **IntelliJ IDEA 2026.2.3** and
+**2026.3 EAP (263.7307.60)**. Other products and builds have not been verified.

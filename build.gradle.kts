@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.romaevt"
-version = "1.0.0"
+version = "1.0.1"
 
 val counterProfileRuntime by configurations.creating
 

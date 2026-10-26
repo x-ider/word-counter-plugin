@@ -9,15 +9,19 @@ import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.event.SelectionEvent
 import com.intellij.openapi.editor.event.SelectionListener
-import com.intellij.openapi.fileEditor.FileEditor
-import com.intellij.openapi.fileEditor.TextEditor
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent
+import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.StatusBarWidget
+import com.intellij.openapi.wm.impl.status.EditorBasedWidget
 import com.intellij.openapi.wm.impl.status.TextPanel
 import com.intellij.ui.ClickListener
 import com.intellij.ui.awt.RelativePoint
@@ -31,19 +35,22 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.awt.KeyboardFocusManager
 import java.awt.Point
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
+import java.beans.PropertyChangeListener
 import java.text.NumberFormat
 import java.util.concurrent.atomic.AtomicLong
 import javax.swing.JComponent
 import javax.swing.KeyStroke
 import javax.swing.SwingUtilities
 
-class WordCounterWidget(
+open class WordCounterWidget(
+    project: Project,
     private val scope: CoroutineScope,
     private val settings: WordCounterSettings = service(),
-) : CustomStatusBarWidget, StatusBarWidget.Multiframe {
+) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
     private val panel by lazy {
         TextPanel().apply {
             isVisible = false
@@ -60,7 +67,7 @@ class WordCounterWidget(
             }
         }
     }
-    private var statusBar: StatusBar? = null
+    private val activeEditor = MutableStateFlow<Editor?>(null)
     private var updates: Job? = null
     private var popup: ListPopup? = null
 
@@ -71,23 +78,41 @@ class WordCounterWidget(
 
     override fun getComponent(): JComponent = panel
 
-    override fun copy(): StatusBarWidget = WordCounterWidget(scope, settings)
+    override fun copy(): StatusBarWidget = WordCounterWidget(project, scope, settings)
 
     override fun install(statusBar: StatusBar) {
+        super<EditorBasedWidget>.install(statusBar)
         updates?.cancel()
-        this.statusBar = statusBar
+        myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object : FileEditorManagerListener {
+            override fun fileOpened(source: FileEditorManager, file: VirtualFile) = refreshEditor()
+            override fun fileClosed(source: FileEditorManager, file: VirtualFile) = refreshEditor()
+            override fun selectionChanged(event: FileEditorManagerEvent) = refreshEditor()
+        })
+        val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        val focusListener = PropertyChangeListener { refreshEditor() }
+        focusManager.addPropertyChangeListener("permanentFocusOwner", focusListener)
+        Disposer.register(this) {
+            focusManager.removePropertyChangeListener("permanentFocusOwner", focusListener)
+        }
         updates = scope.launch(Dispatchers.EDT) {
-            statusBar.currentEditor.collectLatest { observeEditor(it) }
+            activeEditor.collectLatest { observeEditor(it) }
+        }
+        refreshEditor()
+    }
+
+    private fun refreshEditor() {
+        // Let the IDE finish switching tabs/focus before resolving this frame's editor.
+        SwingUtilities.invokeLater {
+            if (!isDisposed) activeEditor.value = getEditor()?.takeUnless { it.isDisposed }
         }
     }
 
-    private suspend fun observeEditor(fileEditor: FileEditor?) {
+    private suspend fun observeEditor(editor: Editor?) {
         hide()
-        val textEditor = fileEditor as? TextEditor ?: return
-        val file = textEditor.file ?: return
+        if (editor == null || editor.isDisposed) return
+        val file = FileDocumentManager.getInstance().getFile(editor.document) ?: return
         val format = formatFor(file) ?: return
-        val editor = textEditor.editor
-        if (editor.isDisposed || !file.isValid) return
+        if (!file.isValid) return
         val document = editor.document
         val lifetime = Disposer.newDisposable("Word Counter active editor")
         Disposer.register(this, lifetime)
@@ -194,9 +219,10 @@ class WordCounterWidget(
     }
 
     override fun dispose() {
+        super<EditorBasedWidget>.dispose()
         updates?.cancel()
         updates = null
-        statusBar = null
+        activeEditor.value = null
         popup = null
     }
 
