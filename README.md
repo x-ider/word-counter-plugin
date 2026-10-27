@@ -26,9 +26,12 @@ Settings pop-up
 
 ## Download
 
-[Download Word Counter 1.0.1](word-counter.zip?raw=true)
+[Install Word Counter from JetBrains Marketplace](https://plugins.jetbrains.com/plugin/35493-word-counter)
 
-This is an unsigned build. The plugin is not yet available on JetBrains Marketplace.
+Or open **Settings > Plugins > Marketplace** in your IDE, search for **Word Counter**
+by **Roman Evtushenko**, and click **Install**.
+
+For manual installation, [download Word Counter 1.0.1](word-counter.zip?raw=true):
 
 1. Open **Settings > Plugins**, then the gear menu > **Install Plugin from Disk**.
 2. Select the downloaded ZIP without extracting it. Restart the IDE if prompted.
@@ -54,9 +57,4 @@ Install it using the same steps as above.
 
 ## Supported Versions
 
-Requires IntelliJ Platform **2026.1 (build 261)** or newer. Tested with
-**WebStorm 2026.1.4** and **GoLand 2026.1.4**.
-
-The plugin uses shared platform APIs rather than product-specific dependencies.
-Plugin Verifier also checked compatibility with **IntelliJ IDEA 2026.2.3** and
-**2026.3 EAP (263.7307.60)**. Other products and builds have not been verified.
+Supports JetBrains IDEs from **2026.1 onwards**.
