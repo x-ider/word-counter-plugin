@@ -1,16 +1,19 @@
 # Word Counter
 
 Word and character counts in the status bar of IntelliJ-based IDEs for plain text,
-Markdown, and MDX. Free and open source under the [MIT license](LICENSE).
+Markdown, MDX, and AsciiDoc. Free and open source under the [MIT license](LICENSE).
 
 ![Word Counter showing whole-document totals and a detailed tooltip](images/document-counts.png)
 
 ## Key Features
 
 - Live totals for the whole document or selected text, including multiple carets.
-- Supports `.txt`, `.text`, `.md`, `.markdown`, and `.mdx` files.
+- Supports `.txt`, `.text`, `.md`, `.markdown`, `.mdx`, and `.adoc` files.
 - Markdown-aware counting excludes frontmatter, formatting, link URLs, images,
   and code blocks.
+- Partial support for `.adoc` (AsciiDoc): common syntax such as attributes,
+  comments, headings, and source blocks is skipped, but complex markup may make
+  the totals slightly off.
 - Counts literal MDX text without evaluating components or expressions.
 - Click the counter to adjust the update delay and include or exclude whitespace.
 

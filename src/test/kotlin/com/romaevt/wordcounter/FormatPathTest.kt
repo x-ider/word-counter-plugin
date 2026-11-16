@@ -34,7 +34,7 @@ class FormatPathTest {
     @Test fun `plain Markdown keeps only compact prose segments`() {
         val source = "A long ordinary sentence. ".repeat(5_000)
         val parsed = WordCounter.parse(source, DocumentFormat.MARKDOWN)
-        assertTrue(parsed is ParsedDocument.Markdown)
+        assertTrue(parsed is ParsedDocument.Prose)
         assertEquals(12, parsed.mappingStorageBytes)
         assertEquals(24, WordCounter.parse("Hello **world**", DocumentFormat.MARKDOWN).mappingStorageBytes)
     }
