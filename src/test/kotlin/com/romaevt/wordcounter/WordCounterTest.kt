@@ -209,6 +209,23 @@ class WordCounterTest {
         assertEquals(1, WordCounter.count("part-".repeat(5_000) + "end").words)
     }
 
+    @Test fun `AsciiDoc keeps prose and skips common syntax`() {
+        val source = "= Title\n:description: Hidden words\n// Hidden comment\n\nSome *bold* prose.\n\n" +
+            "[source,java]\n----\npublic class Hidden { }\n----\n\nAnother paragraph."
+        assertText("Title\nSome *bold* prose.\nAnother paragraph.", source, DocumentFormat.ASCIIDOC)
+    }
+
+    @Test fun `AsciiDoc literal and comment blocks are excluded`() {
+        assertText("Visible", "....\nhidden\n....\n////\nhidden too\n////\n\nVisible", DocumentFormat.ASCIIDOC)
+    }
+
+    @Test fun `AsciiDoc selections use cleaned positions`() {
+        val source = ":attr: hidden\n\nVisible prose"
+        val parsed = WordCounter.parse(source, DocumentFormat.ASCIIDOC)
+        val start = source.indexOf("prose")
+        assertEquals(TextCounts(1, 5, 5), parsed.countSelections(listOf(SourceRange(start, start + 5))))
+    }
+
     private fun assertText(expected: String, source: String, format: DocumentFormat = DocumentFormat.MARKDOWN) {
         val parsed = WordCounter.parse(source, format)
         assertEquals(expected, parsed.text)

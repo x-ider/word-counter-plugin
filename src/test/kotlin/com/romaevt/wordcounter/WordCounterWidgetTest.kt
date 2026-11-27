@@ -110,6 +110,11 @@ class WordCounterWidgetTest : BasePlatformTestCase() {
         ImageIO.write(image, "png", output.toFile())
     }
 
+    fun testAsciiDocUsesAsciiDocRules() {
+        activate("article.adoc", ":attr: hidden\n\n**Hello** world")
+        awaitText("2 words · 15 chars")
+    }
+
     fun testMdxUsesMdxRules() {
         activate("article.MDX", "---\ntitle: Hidden\n---\nimport Box from './Box';\n\n<Box title=\"Hidden\">Hello {value}world</Box>")
         awaitText("2 words \u00B7 11 chars")

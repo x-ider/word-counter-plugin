@@ -230,6 +230,7 @@ open class WordCounterWidget(
         "txt", "text" -> DocumentFormat.PLAIN_TEXT
         "md", "markdown" -> DocumentFormat.MARKDOWN
         "mdx" -> DocumentFormat.MDX
+        "adoc" -> DocumentFormat.ASCIIDOC
         else -> null
     }
 }

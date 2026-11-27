@@ -41,7 +41,7 @@ internal sealed class ParsedDocument {
         }
     }
 
-    class Markdown(private val prose: MappedText) : ParsedDocument() {
+    class Prose(private val prose: MappedText) : ParsedDocument() {
         override val text: String get() = prose.text
         override val counts = WordCounter.countText(text)
         override val mappingStorageBytes: Int get() = prose.mappingStorageBytes
